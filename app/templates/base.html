@@ -1,0 +1,77 @@
+<!doctype html>
+
+<head>
+<title>{% block title %}{% endblock %}</title>
+
+<!-- enable mobile friendly views -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- stylesheets -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootswatch.theme.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+<!-- better monospace font -->
+<link href="https://fonts.googleapis.com/css?family=Space+Mono" rel="stylesheet">
+
+{% block style %}{% endblock %}
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+
+    <button class="navbar-toggler" type="button"
+      data-toggle="collapse" data-target="#navbar"
+      aria-controls="navbar" aria-expanded="false" aria-label="Toggle">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav mr-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" href="/">Cards</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Random Card</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/random">All</a>
+            <a class="dropdown-item" href="/random?type_line=artifact">Artifact</a>
+            <a class="dropdown-item" href="/random?type_line=creature">Creature</a>
+            <a class="dropdown-item" href="/random?type_line=enchantment">Enchantment</a>
+            <a class="dropdown-item" href="/random?type_line=instant">Instant</a>
+            <a class="dropdown-item" href="/random?type_line=land">Land</a>
+            <a class="dropdown-item" href="/random?type_line=sorcery">Sorcery</a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/ideas">Ideas</a>
+        </li>
+
+      </ul>
+    </div>
+
+  </nav>
+
+{% block content %}{% endblock %}
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted float-right"><a target='_blank' href='https://scryfall.com/'><small>Powered with Scryfall</small><a/></span>
+  </div>
+</footer>
+
+</body>
+
+<!-- scripts -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+{% block javascript %}{% endblock %}
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+</body>
+</html>

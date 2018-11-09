@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{ card.name }}
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/card.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+  <center>
+
+  <!-- card heading -->
+  <h1><strong>{{ card.name }}</strong></h1>
+  {{ card.type_line }}
+  <hr>
+
+  <small><i>{{ card.flavor_text }}</i></small>
+
+  <br><br>
+
+  <div class="container">
+
+    {% for key, value in card.image_uris.items() %}
+      {% if key == 'art_crop' %}
+        <img class='img-thumbnail rounded' src='{{ value }}'>
+      {% endif %}
+    {% endfor %}
+
+    <br><small><strong>Artist:</strong> <i>{{ card.artist }}</i></small>
+
+  </div>
+
+  <br>
+  <button type="button" data-toggle="modal" data-target="#create_idea" class="btn btn-info">Create Idea</button>
+
+  </center>
+
+</div>
+
+<!-- Item creation modal -->
+<div class="modal fade" id="create_idea" tabindex="-1" role="dialog"
+  aria-labelledby="create_idea" aria-hidden="true">
+
+  <form action='/create' method='POST'>
+
+  <div class="modal-dialog" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Create Idea</h2>
+      </div>
+
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label for="inputName"><strong>Name</strong></label>
+            <input name="name" type="text" class="form-control" id="inputName" placeholder="Name" value="{{ card.name }}">
+          </div>
+
+          <div class="form-group">
+            <label for="inputType"><strong>Type</strong></label>
+            <input name="type_line" type="text" class="form-control" id="inputType" placeholder="Type" value="{{ card.type_line }}">
+          </div>
+
+          <div class="form-group">
+            <label for="inputFlavor"><strong>Flavor</strong></label>
+            <textarea name="flavor_text" class="form-control" id="inputFlavor" rows="3">{{ card.flavor_text }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="inputNotes"><strong>Notes</strong></label>
+            <textarea name="notes" class="form-control" id="inputNotes" rows="3"></textarea>
+          </div>
+
+          <input type="hidden" id="inputArtist" name="artist" value="{{ card.artist }}">
+
+          {% for key, value in card.image_uris.items() %}
+            {% if key == 'art_crop' %}
+              <input type="hidden" id="inputArt" name="art_crop" value="{{ value }}">
+            {% endif %}
+          {% endfor %}
+
+      </div>
+
+      <!-- Begin model footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-info" type="submit">Create</button>
+      </div>
+      <!-- End model footer -->
+
+    </div>
+  </div>
+  </form>
+</div>
+
+{% endblock %}
