@@ -6,7 +6,7 @@ Using this application a game developer can come up with inspiration from [Magic
 
 This application was made possible using [Scryfall](https://scryfall.com)'s bulk data files, a big thanks to them for providing an awesome data set!
 
-![alt text](https://imgur.com/ax2LlsT.png")
+![alt text](https://i.imgur.com/qeqIIqb.jpg")
 
 ## Requirements
 
