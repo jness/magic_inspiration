@@ -27,10 +27,11 @@ Once complete you will be able to visit the local web interface:
 
 ## Populate Data
 
-Once you've started the containers, use `docker-compose exec` to populate the datastore.
+Once you've started the containers, use `docker-compose exec` to populate the datastore
+using the Magic the Gathering [set short code](https://scryfall.com/sets).
 
 ```
-$ docker-compose exec web scripts/populate.py
+$ docker-compose exec web scripts/populate.py GRN RTR GTC DGM RAV
 ```
 
 ## Purge Data
