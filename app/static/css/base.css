@@ -6,8 +6,24 @@ html {
 
 body {
   padding-top: 80px;
-  background-color: #EEEEEE;
+  /* background-color: #EEEEEE; */
   margin-bottom: 60px; /* Margin bottom by footer height */
+  font-size: 19px;
+}
+
+p {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.storytext_badge {
+  margin: 5px;
+  margin-bottom: 20px;
+}
+
+.art_crop {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .whitespace {
@@ -16,8 +32,11 @@ body {
 
 .textbox {
   padding: 25px;
-  margin: 15px;
+  margin-bottom: 15px;
   background-color: #E8E8E8;
+  white-space: pre-wrap;
+  font-weight: normal;
+  font-size: 18px;
 }
 
 .monospace {
@@ -33,9 +52,9 @@ body {
   padding-right: 30px;
 }
 
-.bg-dark {
+/* .bg-dark {
   background-color: #343a40 !important
-}
+} */
 
 .footer {
   position: absolute;

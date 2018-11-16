@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
 Cards
 {% endblock %}
@@ -19,60 +18,85 @@ Cards
 
 {% block content %}
 
-<!-- Begin card search form -->
-<div class="container">
+<!-- Begin search form -->
+<form action="/cards" method="GET">
 
-  <form action="/card_search" method="GET">
+  <div class="container">
 
-  <div class="form-row">
+      <div class="form-row">
 
-    <!-- Search input -->
-    <div class="col-9">
-      <label for="inputName" class="sr-only">Search Text</label>
-      <input id="inputName" class="form-control" type="text" name="search_text"
-        value="{{ search_text }}" placeholder="..." required autofocus>
-    </div>
+        <!-- Search input -->
+        <div class="col-4">
+          <label for="inputName" class="sr-only">Search Text</label>
+          <input id="inputName" class="form-control" type="text" name="search_text"
+            value="{{ search_text }}" placeholder="..." autofocus>
+        </div>
 
-    <!-- Search button -->
-    <div class="col-3">
-      <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
-    </div>
+        <!-- Set names -->
+        <div class="col-3">
+          <select name="set_name" class="form-control" id="inputSet">
+            <option value=''>-</option>
+            {% for set in get_sets() %}
+              <option value="{{ set }}" {% if set == set_name %}selected{% endif %}>{{ set }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-  </form>
+        <!-- Color identify -->
+        <div class="col-2">
+          <select name="color_identity" class="form-control" id="inputColor">
+            <option value=''>-</option>
+            {% for color in get_colors() %}
+              {% if color %}
+                <option value="{{ color }}" {% if color == color_identity %}selected{% endif %}>
+                  {{ color }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
 
+        <!-- Search button -->
+        <div class="col-3">
+          <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
+        </div>
+
+      </div>
   </div>
 
-</div>
-<hr>
-<!-- End card search form -->
+</form>
 
+<hr>
 
 <!-- Begin card list -->
 <div class="container">
 
-  <table id="table" class="table table-striped" style="width:100%">
+  <div class="row">
 
-      <tr>
-        <th>Art</th>
-        <th>Name</th>
-        <th class="d-none d-md-table-cell">Type</th>
-      </tr>
-
-      {% for card in cards %}
-      <tr>
+    {% for card in cards %}
+    <div class="col-lg-4 col-md-6 col-sm-6">
+      <center>
 
         {% for key, value in card.image_uris.items() %}
           {% if key == 'art_crop' %}
-            <td><a href='/card/{{ card._id }}'><img class="img-thumbnail lazyload" width=175 data-src='{{ value }}'></a></td>
+            <td><a href="/cards/{{ card._id }}"><img class="lazyload rounded art_crop" width=250 data-src="{{ value }}""></a></td>
           {% endif %}
         {% endfor %}
 
-        <td><a href='/card/{{ card._id }}'>{{ card.name }}</a></td>
-        <td class="d-none d-md-table-cell">{{ card.type_line }}</td>
-      </tr>
-      {% endfor %}
+        <br><small><strong>{{ card.name }}</strong></small><br>
 
-  </table>
+        {% set type_tokens = card.type_line.split() %}
+        {% for type_token in type_tokens %}
+          <small><a href="/cards?search_text={{ type_token }}">{{ type_token }}</a></small>
+        {% endfor %}
+        <hr>
+
+      </center>
+    </div>
+    {% endfor %}
+
+
+  </div>
 
 </div>
 <!-- End card list -->

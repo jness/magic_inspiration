@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Stories
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stories.css') }}">
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/stories.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lazyload.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Begin card search form -->
+<form action="/stories" method="GET">
+  <div class="container">
+
+    <div class="form-row">
+
+      <!-- Search input -->
+      <div class="col-9">
+        <label for="inputName" class="sr-only">Search Text</label>
+        <input id="inputName" class="form-control" type="text" name="search_text"
+          value="{{ search_text }}" placeholder="..." required autofocus>
+      </div>
+
+      <!-- Search button -->
+      <div class="col-3">
+        <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
+      </div>
+
+    </div>
+
+</div>
+</form>
+<hr>
+
+<div class="container">
+
+  <div class="row">
+
+
+      {% for story in stories %}
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <center>
+        <a href='/stories/{{ story._id }}'><img class="lazyload rounded art_crop" width=250 data-src='{{ story.art_crop }}'></a>
+        <br><small><strong>{{ story.name }}</strong></small><br>
+        <small>{{ story.description }}</small>
+        <hr>
+        </center>
+      </div>
+      {% endfor %}
+
+  </div>
+
+</div>
+{% endblock %}

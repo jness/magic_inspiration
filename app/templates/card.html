@@ -19,70 +19,72 @@
 {% block content %}
 <div class="container">
 
-  <center>
+  <div class="row justify-content-center">
 
-  <!-- card heading -->
-  <h1><strong>{{ card.name }}</strong></h1>
-  {{ card.type_line }}
-  <hr>
+    <div class="col-md-6">
 
-  <small><i>{{ card.flavor_text }}</i></small>
+      <!-- card heading -->
+      <h1><strong>{{ card.name }}</strong></h1>
+      {{ card.type_line }}
 
-  <br><br>
+      <hr>
 
-  <div class="container">
+      <!-- card flavor text -->
+      <small>{{ card.flavor_text }}</small>
 
-    {% for key, value in card.image_uris.items() %}
-      {% if key == 'art_crop' %}
-        <img class='img-thumbnail rounded' src='{{ value }}'>
-      {% endif %}
-    {% endfor %}
+      <!-- card image -->
+      {% for key, value in card.image_uris.items() %}
+        {% if key == "art_crop" %}
+          <img class="img-fluid rounded art_crop" src="{{ value }}"><br>
+        {% endif %}
+      {% endfor %}
 
-    <br><small><strong>Artist:</strong> <i>{{ card.artist }}</i></small>
+      <!-- card artist -->
+      <small><strong>Artist:</strong> <i>{{ card.artist }}</i></small>
 
+      <hr>
+
+      <!-- create idea button -->
+      <span class="float-right">
+        <button type="button" data-toggle="modal" data-target="#create_idea" class="btn btn-outline-dark">Make Idea</button>
+        <button type="button" data-toggle="modal" data-target="#create_story" class="btn btn-outline-dark">Make Story</button>
+      </span>
+
+    </div>
   </div>
-
-  <br>
-  <button type="button" data-toggle="modal" data-target="#create_idea" class="btn btn-info">Create Idea</button>
-
-  </center>
-
 </div>
 
-<!-- Item creation modal -->
+<!-- Idea creation modal -->
+
 <div class="modal fade" id="create_idea" tabindex="-1" role="dialog"
   aria-labelledby="create_idea" aria-hidden="true">
 
-  <form action='/create' method='POST'>
+  <form action='/ideas/create' method='POST'>
 
-  <div class="modal-dialog" role="document">
-
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-      <div class="modal-header">
-        <h2 class="modal-title">Create Idea</h2>
-      </div>
-
+      <!-- Begin model body -->
       <div class="modal-body">
 
           <div class="form-group">
             <label for="inputName"><strong>Name</strong></label>
-            <input name="name" type="text" class="form-control" id="inputName" placeholder="Name" value="{{ card.name }}">
+            <input name="name" type="text" class="form-control" id="inputName" value="{{ card.name }}" required>
           </div>
 
           <div class="form-group">
             <label for="inputType"><strong>Type</strong></label>
-            <input name="type_line" type="text" class="form-control" id="inputType" placeholder="Type" value="{{ card.type_line }}">
+            <input name="type_line" type="text" class="form-control" id="inputType" value="{{ card.type_line }}">
           </div>
 
           <div class="form-group">
             <label for="inputFlavor"><strong>Flavor</strong></label>
-            <textarea name="flavor_text" class="form-control" id="inputFlavor" rows="3">{{ card.flavor_text }}</textarea>
+            <textarea name="flavor_text" class="form-control" id="inputFlavor" rows="2">{{ card.flavor_text }}</textarea>
           </div>
 
           <div class="form-group">
             <label for="inputNotes"><strong>Notes</strong></label>
-            <textarea name="notes" class="form-control" id="inputNotes" rows="3"></textarea>
+            <textarea name="notes" class="form-control" id="inputNotes" rows="8" required></textarea>
           </div>
 
           <input type="hidden" id="inputArtist" name="artist" value="{{ card.artist }}">
@@ -97,8 +99,61 @@
 
       <!-- Begin model footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-        <button class="btn btn-info" type="submit">Create</button>
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+        <button class="btn btn-outline-success" type="submit">Save</button>
+      </div>
+
+    </div>
+  </div>
+  </form>
+</div>
+
+
+<div class="modal fade" id="create_story" tabindex="-1" role="dialog"
+  aria-labelledby="create_story" aria-hidden="true">
+
+  <form action='/stories/create' method='POST'>
+
+  <div class="modal-dialog modal-lg" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label for="inputName"><strong>Name</strong></label>
+            <input name="name" type="text" class="form-control" id="inputName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="inputDescription"><strong>Description</strong></label>
+            <input name="description" type="text" class="form-control" id="inputDescription" required>
+          </div>
+
+          <strong>Add idea</strong>:
+          {% for idea in get_ideas() %}
+            <button type="button" class="storytext_badge btn btn-sm btn-outline-dark" onclick="input_storytext('{{ idea._id}}', '{{ idea.name }}');">{{ idea.name }}</button>
+          {% endfor %}
+
+          <div class="form-group">
+            <label for="inputContent"><strong>Content</strong></label>
+            <textarea id="storytext" name="content" class="form-control" id="inputContent" rows="12" required></textarea>
+          </div>
+
+          <input type="hidden" id="inputArtist" name="artist" value="{{ card.artist }}">
+
+          {% for key, value in card.image_uris.items() %}
+            {% if key == 'art_crop' %}
+              <input type="hidden" id="inputArt" name="art_crop" value="{{ value }}">
+            {% endif %}
+          {% endfor %}
+
+      </div>
+
+      <!-- Begin model footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+        <button class="btn btn-outline-success" type="submit">Save</button>
       </div>
       <!-- End model footer -->
 
@@ -106,5 +161,6 @@
   </div>
   </form>
 </div>
+
 
 {% endblock %}

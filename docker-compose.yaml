@@ -16,7 +16,7 @@ services:
 
   web:
     build: .
-    command: python app/app.py
+    command: python app/routes.py
     volumes:
       - .:/magic_inspiration
     ports:

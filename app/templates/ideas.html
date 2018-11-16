@@ -20,53 +20,51 @@ Ideas
 {% block content %}
 
 <!-- Begin card search form -->
-<div class="container">
+<form action="/ideas" method="GET">
+  <div class="container">
 
-  <form action="/idea_search" method="GET">
+    <div class="form-row">
 
-  <div class="form-row">
+      <!-- Search input -->
+      <div class="col-9">
+        <label for="inputName" class="sr-only">Search Text</label>
+        <input id="inputName" class="form-control" type="text" name="search_text"
+          value="{{ search_text }}" placeholder="..." required autofocus>
+      </div>
 
-    <!-- Search input -->
-    <div class="col-9">
-      <label for="inputName" class="sr-only">Search Text</label>
-      <input id="inputName" class="form-control" type="text" name="search_text"
-        value="{{ search_text }}" placeholder="..." required autofocus>
+      <!-- Search button -->
+      <div class="col-3">
+        <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
+      </div>
+
     </div>
-
-    <!-- Search button -->
-    <div class="col-3">
-      <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
-    </div>
-
-  </form>
-
-  </div>
 
 </div>
+</form>
 <hr>
-<!-- End card search form -->
 
 
 <!-- Begin card list -->
 <div class="container">
 
-  <table id="table" class="table table-striped" style="width:100%">
+  <div class="row">
 
-      <tr>
-        <th>Art</th>
-        <th>Name</th>
-        <th class="d-none d-md-table-cell">Type</th>
-      </tr>
 
       {% for idea in ideas %}
-      <tr>
-        <td><a href='/idea/{{ idea._id }}'><img class="img-thumbnail lazyload" width=175 data-src='{{ idea.art_crop }}'></a></td>
-        <td><a href='/idea/{{ idea._id }}'>{{ idea.name }}</a></td>
-        <td class="d-none d-md-table-cell">{{ idea.type_line }}</td>
-      </tr>
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <center>
+        <a href='/ideas/{{ idea._id }}'><img class="lazyload rounded art_crop" width=250 data-src='{{ idea.art_crop }}'></a>
+        <br><small><strong>{{ idea.name }}</strong></small><br>
+        {% set type_tokens = idea.type_line.split() %}
+        {% for type_token in type_tokens %}
+          <small><a href="/ideas?search_text={{ type_token }}">{{ type_token }}</a></small>
+        {% endfor %}
+        <hr>
+        </center>
+      </div>
       {% endfor %}
 
-  </table>
+  </div>
 
 </div>
 <!-- End card list -->

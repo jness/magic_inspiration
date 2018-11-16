@@ -9,6 +9,15 @@ mongo = MongoClient('mongo', username='root', password='password')
 database = mongo.magic_inspiration
 
 
+def distinct(collection_name, field):
+    """
+    Get distinct field types
+    """
+
+    collection = getattr(database, collection_name)
+    return sorted(collection.distinct(field))
+
+
 def insert_one(collection_name, **kwargs):
     """
     Insert document into mongo
@@ -36,43 +45,6 @@ def delete_one(collection_name, _id):
     return collection.delete_one({'_id': ObjectId(_id)})
 
 
-def find(collection_name, **kwargs):
-    """
-    Perform a mongo search operation
-    """
-
-    if '_id' in kwargs:
-        kwargs['_id'] = ObjectId(kwargs['_id'])
-
-    collection = getattr(database, collection_name)
-    return collection.find(kwargs)
-
-
-def full_text(collection_name, text):
-    """
-    Perform a mongo full text search
-    """
-
-    # fields to perform regex search against
-    fields = ['name', 'type_line']
-
-    # empty mongo or query
-    kwargs = {'$or': []}
-
-    # populate mongo or query with all fields
-    for field in fields:
-        kwargs['$or'].append(
-            {
-                field: {
-                    '$regex': text,
-                    '$options': 'i'
-                }
-            }
-        )
-
-    return find(collection_name, **kwargs)
-
-
 def find_one(collection_name, **kwargs):
     """
     Perform a mongo search operation for one document
@@ -85,17 +57,55 @@ def find_one(collection_name, **kwargs):
     return collection.find_one(kwargs)
 
 
-def find_cards(**kwargs):
+def find(collection_name, **kwargs):
     """
-    Get all cards with optional keyword arguments
+    Perform a mongo search operation
     """
 
-    return find('cards', **kwargs).sort('name')
+    if '_id' in kwargs:
+        kwargs['_id'] = ObjectId(kwargs['_id'])
+
+    if 'color_identity' in kwargs:
+        kwargs['color_identity'] = list(kwargs['color_identity'])
+
+    collection = getattr(database, collection_name)
+    return collection.find(kwargs)
 
 
-def find_random_card(type_line=None):
+def search(collection_name, **kwargs):
     """
-    Find a random card
+    Perform a mongo text search against multiple fields
+    """
+
+    # fields to perform regex search against
+    fields = ['name', 'type_line']
+
+    if 'search_text' in kwargs:
+
+        # pull search_text from kwargs
+        text = kwargs['search_text']
+        del(kwargs['search_text'])
+
+        # empty mongo or query
+        kwargs['$or'] = []
+
+        # populate mongo or query with all fields
+        for field in fields:
+            kwargs['$or'].append(
+                {
+                    field: {
+                        '$regex': text,
+                        '$options': 'i'
+                    }
+                }
+            )
+
+    return find(collection_name, **kwargs)
+
+
+def random(collection_name, type_line=None):
+    """
+    Get a random document
     """
 
     # empty list for filters
@@ -114,11 +124,11 @@ def find_random_card(type_line=None):
             }
         )
 
-    # get a single random card
+    # set our sample size to 1
     filters.append({'$sample': {'size': 1}})
 
-    collection = getattr(database, 'cards')
-    cards = collection.aggregate(filters)
+    collection = getattr(database, collection_name)
+    document = collection.aggregate(filters)
 
-    # get our single card
-    return cards.next()
+    # return single document
+    return document.next()

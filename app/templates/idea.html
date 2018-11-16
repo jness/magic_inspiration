@@ -19,40 +19,41 @@
 {% block content %}
 <div class="container">
 
-  <center>
+  <div class="row justify-content-center">
 
-  <!-- card heading -->
-  <h1><strong>{{ idea.name }}</strong></h1>
-  {{ idea.type_line }}
-  <hr>
+    <div class="col-md-6">
 
-  <small><i>{{ idea.flavor_text }}</i></small>
+      <!-- card heading -->
+      <h1><strong>{{ idea.name }}</strong></h1>
+      {{ idea.type_line }}
 
-  <br><br>
+      <hr>
 
-  <div class="container">
+      <!-- card flavor text -->
+      <small>{{ idea.flavor_text }}</small>
 
-    <img class='img-thumbnail rounded' src='{{ idea.art_crop }}'>
+      <!-- card image -->
+      <img class="img-fluid rounded art_crop" src="{{ idea.art_crop }}"><br>
 
-    <br><small><strong>Artist:</strong> <i>{{ idea.artist }}</i></small>
+      <!-- card artist -->
+      <small><strong>Artist:</strong> <i>{{ idea.artist }}</i></small>
 
-    </center>
+      <hr>
 
-    {% if idea.notes %}
-    <div class="container">
-      <h4>Notes</h4>
-      <p class='whitespace textbox'>{{ idea.notes|safe }}</p>
     </div>
-    {% endif %}
+    <div class="col-md-8">
 
-    <center>
-    <br>
-    <button type="button" data-toggle="modal" data-target="#update_idea" class="btn btn-info">Update</button>
-    </center>
+      {% if idea.notes %}
+      <div class="textbox">{{ idea.notes }}</div>
+      {% endif %}
 
+      <!-- create idea button -->
+      <span class="float-right">
+        <button type="button" data-toggle="modal" data-target="#update_idea" class="btn btn-outline-dark">Update</button>
+      </span>
 
+    </div>
   </div>
-
 </div>
 
 
@@ -60,26 +61,22 @@
 <div class="modal fade" id="update_idea" tabindex="-1" role="dialog"
   aria-labelledby="update_idea" aria-hidden="true">
 
-  <form action='/update' method='POST'>
+  <form action='/ideas/{{ idea._id }}/update' method='POST'>
 
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
 
     <div class="modal-content">
-
-      <div class="modal-header">
-        <h2 class="modal-title">Update Idea</h2>
-      </div>
 
       <div class="modal-body">
 
           <div class="form-group">
             <label for="inputName"><strong>Name</strong></label>
-            <input name="name" type="text" class="form-control" id="inputName" placeholder="Name" value="{{ idea.name }}">
+            <input name="name" type="text" class="form-control" id="inputName" value="{{ idea.name }}" required>
           </div>
 
           <div class="form-group">
             <label for="inputType"><strong>Type</strong></label>
-            <input name="type_line" type="text" class="form-control" id="inputType" placeholder="Type" value="{{ idea.type_line }}">
+            <input name="type_line" type="text" class="form-control" id="inputType" value="{{ idea.type_line }}">
           </div>
 
           <div class="form-group">
@@ -89,7 +86,7 @@
 
           <div class="form-group">
             <label for="inputNotes"><strong>Notes</strong></label>
-            <textarea name="notes" class="form-control" id="inputNotes" rows="3">{{ idea.notes }}</textarea>
+            <textarea name="notes" class="form-control" id="inputNotes" rows="3" required>{{ idea.notes }}</textarea>
           </div>
 
           <input type="hidden" id="inputId" name="id" value="{{ idea._id }}">
@@ -98,9 +95,9 @@
 
       <!-- Begin model footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-        <button type="button" data-toggle="modal" data-target="#delete_idea" class="btn btn-danger">Delete</button>
-        <button class="btn btn-info" type="submit">Update</button>
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+        <button type="button" data-toggle="modal" data-target="#delete_idea" class="btn btn-outline-danger">Delete</button>
+        <button class="btn btn-outline-success" type="submit">Save</button>
       </div>
       <!-- End model footer -->
 
@@ -124,8 +121,8 @@
 
         <!-- Begin model footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-danger" href="/delete?id={{ idea._id }}">Delete</a>
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+          <a class="btn btn-danger" href="/ideas/{{ idea._id }}/delete">Delete</a>
         </div>
         <!-- End model footer -->
 
